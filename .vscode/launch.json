@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-InventoryManagementSystemApplication<InventoryManagementSystem>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.skillstorm.InventoryManagementSystem.InventoryManagementSystemApplication",
+      "projectName": "InventoryManagementSystem",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
