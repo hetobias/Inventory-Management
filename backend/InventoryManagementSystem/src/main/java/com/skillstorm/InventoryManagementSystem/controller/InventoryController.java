@@ -46,6 +46,8 @@ public class InventoryController {
 
     // Update the inventory item properties
     inventory.setQuantity(updatedInventory.getQuantity());
+    inventory.setWarehouse(updatedInventory.getWarehouse());
+    inventory.setProduct(updatedInventory.getProduct());
 
     return inventoryService.updateInventory(inventory);
   }
