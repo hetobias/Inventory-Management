@@ -27,6 +27,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Inventory> inventory;
 
+    // Constructors
     public Product(Long id, String name, String description, double price, List<Inventory> inventory) {
         this.id = id;
         this.name = name;
@@ -35,6 +36,7 @@ public class Product {
         this.inventory = inventory;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }

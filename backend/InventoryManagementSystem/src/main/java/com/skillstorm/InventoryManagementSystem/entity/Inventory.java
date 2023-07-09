@@ -26,6 +26,7 @@ public class Inventory {
   @Column(nullable = false)
   private int quantity;
 
+  // Constructors
   public Inventory(Long id, Warehouse warehouse, Product product, int quantity) {
     this.id = id;
     this.warehouse = warehouse;
@@ -33,6 +34,7 @@ public class Inventory {
     this.quantity = quantity;
   }
 
+  // Getters and Setters
   public Long getId() {
     return id;
   }
