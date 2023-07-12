@@ -4,57 +4,43 @@ import com.skillstorm.InventoryManagementSystem.entity.Product;
 import com.skillstorm.InventoryManagementSystem.exception.NotFoundException;
 import com.skillstorm.InventoryManagementSystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
-  private final ProductService productService;
-
   @Autowired
-  public ProductController(ProductService productService) {
-    this.productService = productService;
-  }
+  private ProductService productService;
 
-  // Get all products
   @GetMapping
-  public List<Product> getAllProducts() {
-    return productService.getAllProducts();
+  public ResponseEntity<List<Product>> getAllProducts() {
+    return ResponseEntity.ok(productService.getAllProducts());
   }
 
-  // Get a product by ID
   @GetMapping("/{id}")
-  public Product getProductById(@PathVariable Long id) {
-    return productService.getProductById(id)
-        .orElseThrow(() -> new NotFoundException("Product not found with ID: " + id));
+  public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id) {
+    return ResponseEntity.ok(productService.getProductById(id));
   }
 
-  // Create a new product
   @PostMapping
-  public Product createProduct(@RequestBody Product product) {
-    return productService.createProduct(product);
+  public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
   }
 
-  // Update a product by ID
-  @PutMapping("/{id}")
-  public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
-    Product product = productService.getProductById(id)
-        .orElseThrow(() -> new NotFoundException("Product not found with ID: " + id));
-
-    // Update the product properties
-    product.setName(updatedProduct.getName());
-    product.setDescription(updatedProduct.getDescription());
-    product.setPrice(updatedProduct.getPrice());
-
-    return productService.updateProduct(product);
+  @PutMapping
+  public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+    return ResponseEntity.ok(productService.updateProduct(product));
   }
 
-  // Delete a product by ID
   @DeleteMapping("/{id}")
-  public void deleteProduct(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     productService.deleteProduct(id);
+    return ResponseEntity.ok().build();
   }
 }

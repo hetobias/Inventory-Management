@@ -1,60 +1,45 @@
 package com.skillstorm.InventoryManagementSystem.controller;
 
 import com.skillstorm.InventoryManagementSystem.entity.Warehouse;
-import com.skillstorm.InventoryManagementSystem.exception.NotFoundException;
 import com.skillstorm.InventoryManagementSystem.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/warehouse")
+@RequestMapping("/api/warehouses")
 public class WarehouseController {
 
-  private final WarehouseService warehouseService;
-
   @Autowired
-  public WarehouseController(WarehouseService warehouseService) {
-    this.warehouseService = warehouseService;
-  }
+  private WarehouseService warehouseService;
 
-  // Get all warehouses
   @GetMapping
-  public List<Warehouse> getAllWarehouses() {
-    return warehouseService.getAllWarehouses();
+  public ResponseEntity<List<Warehouse>> getAllWarehouses() {
+    return ResponseEntity.ok(warehouseService.getAllWarehouses());
   }
 
-  // Get all warehouse by ID
   @GetMapping("/{id}")
-  public Warehouse getWarehouseById(@PathVariable Long id) {
-    return warehouseService.getWarehouseById(id)
-        .orElseThrow(() -> new NotFoundException("Warehouse not found with ID: " + id));
+  public ResponseEntity<Optional<Warehouse>> getWarehouseById(@PathVariable Long id) {
+    return ResponseEntity.ok(warehouseService.getWarehouseById(id));
   }
 
-  // Create a new warehouse
   @PostMapping
-  public Warehouse createWarehouse(@RequestBody Warehouse warehouse) {
-    return warehouseService.createWarehouse(warehouse);
+  public ResponseEntity<Warehouse> createWarehouse(@RequestBody Warehouse warehouse) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.createWarehouse(warehouse));
   }
 
-  // Update a warehouse by ID
-  @PutMapping("/{id}")
-  public Warehouse updateWarehouse(@PathVariable Long id, @RequestBody Warehouse updatedWarehouse) {
-    Warehouse warehouse = warehouseService.getWarehouseById(id)
-        .orElseThrow(() -> new NotFoundException("Warehouse not found with ID: " + id));
-
-    // Update the warehouse properties
-    warehouse.setName(updatedWarehouse.getName());
-    warehouse.setLocation(updatedWarehouse.getLocation());
-    warehouse.setCapacity(updatedWarehouse.getCapacity());
-
-    return warehouseService.updateWarehouse(warehouse);
+  @PutMapping
+  public ResponseEntity<Warehouse> updateWarehouse(@RequestBody Warehouse warehouse) {
+    return ResponseEntity.ok(warehouseService.updateWarehouse(warehouse));
   }
 
-  // Delete a warehouse by ID
   @DeleteMapping("/{id}")
-  public void deleteWarehouse(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteWarehouse(@PathVariable Long id) {
     warehouseService.deleteWarehouse(id);
+    return ResponseEntity.ok().build();
   }
 }
