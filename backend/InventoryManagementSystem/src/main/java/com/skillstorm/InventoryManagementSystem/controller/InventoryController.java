@@ -32,9 +32,27 @@ public class InventoryController {
     return ResponseEntity.status(HttpStatus.CREATED).body(inventoryService.createInventory(inventory));
   }
 
-  @PutMapping
-  public ResponseEntity<Inventory> updateInventory(@RequestBody Inventory inventory) {
-    return ResponseEntity.ok(inventoryService.updateInventory(inventory));
+  @PutMapping("/{id}")
+  public ResponseEntity<Inventory> updateInventory(@PathVariable Long id, @RequestBody Inventory updatedInventory) {
+    // Retrieve the existing inventory by ID
+    Optional<Inventory> existingInventoryOptional = inventoryService.getInventoryById(id);
+
+    if (existingInventoryOptional.isPresent()) {
+      Inventory existingInventory = existingInventoryOptional.get();
+
+      // Update the necessary attributes of the existing inventory
+      existingInventory.setProductId(updatedInventory.getProductId());
+      existingInventory.setWarehouseId(updatedInventory.getWarehouseId());
+      existingInventory.setQuantity(updatedInventory.getQuantity());
+
+      // Save the updated inventory in the database
+      Inventory savedInventory = inventoryService.updateInventory(existingInventory);
+
+      return ResponseEntity.ok(savedInventory);
+    } else {
+      // Inventory with the given ID does not exist
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/{id}")
