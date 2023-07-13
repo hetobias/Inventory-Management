@@ -32,9 +32,10 @@ public class WarehouseController {
     return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.createWarehouse(warehouse));
   }
 
-  @PutMapping
-  public ResponseEntity<Warehouse> updateWarehouse(@RequestBody Warehouse warehouse) {
-    return ResponseEntity.ok(warehouseService.updateWarehouse(warehouse));
+  @PutMapping("/{id}")
+  public ResponseEntity<Warehouse> updateWarehouse(@PathVariable Long id, @RequestBody Warehouse updatedWarehouse) {
+    Warehouse updated = warehouseService.updateWarehouse(id, updatedWarehouse);
+    return ResponseEntity.ok(updated);
   }
 
   @DeleteMapping("/{id}")

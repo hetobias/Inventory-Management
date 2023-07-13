@@ -31,7 +31,6 @@ public class InventoryService {
   /**
    * Create a new inventory item.
    */
-
   public Inventory createInventory(Inventory inventory) {
     // Retrieve the product by ID
     Product product = productRepository.findById(inventory.getProduct().getId()).orElse(null);
