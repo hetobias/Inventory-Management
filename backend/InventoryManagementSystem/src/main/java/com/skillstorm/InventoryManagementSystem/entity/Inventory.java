@@ -27,6 +27,12 @@ public class Inventory {
   @Column(name = "id")
   private Long id;
 
+  @Column(name = "product_id", insertable = false, updatable = false)
+  private Long productId;
+
+  @Column(name = "warehouse_id", insertable = false, updatable = false)
+  private Long warehouseId;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "product_id", nullable = false)
   @JsonBackReference(value = "product-inventory")
@@ -39,4 +45,5 @@ public class Inventory {
 
   @Column(name = "quantity")
   private Integer quantity;
+
 }
