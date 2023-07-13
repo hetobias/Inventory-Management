@@ -33,9 +33,27 @@ public class ProductController {
     return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
   }
 
-  @PutMapping
-  public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
-    return ResponseEntity.ok(productService.updateProduct(product));
+  @PutMapping("/{id}")
+  public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+    // Retrieve the existing product by ID
+    Optional<Product> existingProductOptional = productService.getProductById(id);
+
+    if (existingProductOptional.isPresent()) {
+      Product existingProduct = existingProductOptional.get();
+
+      // Update the necessary attributes of the existing product
+      existingProduct.setName(updatedProduct.getName());
+      existingProduct.setDescription(updatedProduct.getDescription());
+      existingProduct.setPrice(updatedProduct.getPrice());
+
+      // Save the updated product in the database
+      Product savedProduct = productService.updateProduct(existingProduct);
+
+      return ResponseEntity.ok(savedProduct);
+    } else {
+      // Product with the given ID does not exist
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/{id}")
