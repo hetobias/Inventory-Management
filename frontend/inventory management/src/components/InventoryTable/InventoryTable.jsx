@@ -170,7 +170,7 @@ const InventoryTable = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ paddingTop: '75px' }}>
       <h2>Inventories</h2>
       {!showCreateForm ? (
         <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">

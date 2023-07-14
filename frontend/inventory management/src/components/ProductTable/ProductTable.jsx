@@ -97,7 +97,7 @@ const ProductTable = () => {
 
   return (
     <div>
-      <div className="container">
+      <div className="container" style={{ paddingTop: '75px' }}>
       <h2>Products</h2>
       {!showCreateForm ? (
         <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">
