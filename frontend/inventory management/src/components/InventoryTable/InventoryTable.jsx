@@ -6,4 +6,4 @@ const InventoryTable = () => {
   )
 }
 
-export default InventoryTable;
+export default InventoryTable

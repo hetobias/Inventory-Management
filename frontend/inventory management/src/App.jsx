@@ -8,20 +8,12 @@ import WarehouseTable from './components/WarehouseTable/WarehouseTable';
 function App() {
   return (
     <Router>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-3">
-            <Sidebar />
-          </div>
-          <div className="col-md-9">
-            <Routes>
-              <Route path="/inventory" element={<InventoryTable />} />
-              <Route path="/products" element={<ProductTable />} />
-              <Route path="/warehouses" element={<WarehouseTable />} />
-            </Routes>
-          </div>
-        </div>
-      </div>
+      <Sidebar />
+      <Routes>
+        <Route path="/inventory" element={<InventoryTable />} />
+        <Route path="/products" element={<ProductTable />} />
+        <Route path="/warehouses" element={<WarehouseTable />} />
+      </Routes>
     </Router>
   );
 }
