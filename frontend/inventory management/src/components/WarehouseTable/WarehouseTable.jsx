@@ -8,6 +8,8 @@ const WarehouseTable = () => {
   const [updatedWarehouseLocation, setUpdatedWarehouseLocation] = useState('');
   const [updatedWarehouseCapacity, setUpdatedWarehouseCapacity] = useState('');
   const [productNames, setProductNames] = useState({});
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showInventories, setShowInventories] = useState({});
 
   useEffect(() => {
     fetchWarehouses();
@@ -39,12 +41,11 @@ const WarehouseTable = () => {
     }
   };
 
-  const handleToggleInventories = async (warehouseId) => {
-    if (editingWarehouseId === warehouseId) {
-      setEditingWarehouseId(null);
-    } else {
-      setEditingWarehouseId(warehouseId);
-    }
+  const handleToggleInventories = (warehouseId) => {
+    setShowInventories((prevState) => ({
+      ...prevState,
+      [warehouseId]: !prevState[warehouseId],
+    }));
   };
 
   const handleEditWarehouse = (warehouseId, warehouseName, warehouseLocation, warehouseCapacity) => {
@@ -123,9 +124,39 @@ const WarehouseTable = () => {
   // Keeps the order of the table, so if the page ever refreshes it will keep that order.
   const sortedWarehouses = warehouses.slice().sort((a, b) => a.id - b.id);
 
+  const handleToggleCreateForm = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div>
-      <h2>Warehouse Table</h2>
+      <h2>Warehouses</h2>
+      {!showCreateForm ? (
+        <button onClick={handleToggleCreateForm}>Add New Warehouse</button>
+      ) : (
+        <div>
+          <input
+            type="text"
+            placeholder="Name"
+            value={updatedWarehouseName}
+            onChange={(e) => setUpdatedWarehouseName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={updatedWarehouseLocation}
+            onChange={(e) => setUpdatedWarehouseLocation(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Capacity"
+            value={updatedWarehouseCapacity}
+            onChange={(e) => setUpdatedWarehouseCapacity(e.target.value)}
+          />
+          <button onClick={handleCreateWarehouse}>Add Warehouse</button>
+          <button onClick={handleToggleCreateForm}>Cancel</button>
+        </div>
+      )}
       {warehouses.length === 0 ? (
         <p>No warehouses</p>
       ) : (
@@ -169,9 +200,9 @@ const WarehouseTable = () => {
                 <td>{warehouse.capacity}</td>
                 <td>
                   <button onClick={() => handleToggleInventories(warehouse.id)}>
-                    {editingWarehouseId === warehouse.id ? 'Hide Inventories' : 'Show Inventories'}
+                    {showInventories[warehouse.id] ? 'Hide Inventories' : 'Show Inventories'}
                   </button>
-                  {editingWarehouseId === warehouse.id && (
+                  {showInventories[warehouse.id] && (
                     <ul>
                       {warehouse.inventories.length > 0 ? (
                         warehouse.inventories.map((inventory) => (
@@ -205,30 +236,9 @@ const WarehouseTable = () => {
           </tbody>
         </table>
       )}
-      <div>
-        <h2>Create Warehouse</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          value={updatedWarehouseName}
-          onChange={(e) => setUpdatedWarehouseName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={updatedWarehouseLocation}
-          onChange={(e) => setUpdatedWarehouseLocation(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Capacity"
-          value={updatedWarehouseCapacity}
-          onChange={(e) => setUpdatedWarehouseCapacity(e.target.value)}
-        />
-        <button onClick={handleCreateWarehouse}>Create</button>
-      </div>
     </div>
   );
 };
 
 export default WarehouseTable;
+

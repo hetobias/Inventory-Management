@@ -8,6 +8,7 @@ const ProductTable = () => {
   const [updatedProductPrice, setUpdatedProductPrice] = useState("");
   const [newProductName, setNewProductName] = useState("");
   const [newProductPrice, setNewProductPrice] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -81,6 +82,7 @@ const ProductTable = () => {
 
       setNewProductName("");
       setNewProductPrice("");
+      setShowCreateForm(false);
       console.log("Product created successfully!");
     } catch (error) {
       console.error("Error creating product:", error);
@@ -89,9 +91,33 @@ const ProductTable = () => {
 
   const sortedProducts = products.slice().sort((a, b) => a.id - b.id);
 
+  const handleToggleCreateForm = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div>
-      <h2>Product Table</h2>
+      <h2>Products</h2>
+      {!showCreateForm ? (
+          <button onClick={handleToggleCreateForm}>Add New Product</button>
+        ) : (
+          <div>
+            <input
+              type="text"
+              placeholder="Name"
+              value={newProductName}
+              onChange={(e) => setNewProductName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Price"
+              value={newProductPrice}
+              onChange={(e) => setNewProductPrice(e.target.value)}
+            />
+            <button onClick={handleCreateProduct}>Create</button>
+            <button onClick={handleToggleCreateForm}>Cancel</button>
+          </div>
+        )}
       {products.length === 0 ? (
         <p>No products</p>
       ) : (
@@ -149,20 +175,6 @@ const ProductTable = () => {
         </table>
       )}
       <div>
-        <h2>Create Product</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          value={newProductName}
-          onChange={(e) => setNewProductName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Price"
-          value={newProductPrice}
-          onChange={(e) => setNewProductPrice(e.target.value)}
-        />
-        <button onClick={handleCreateProduct}>Create</button>
       </div>
     </div>
   );

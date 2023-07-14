@@ -10,6 +10,7 @@ const InventoryTable = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [editingInventoryId, setEditingInventoryId] = useState(null);
   const [updatedQuantity, setUpdatedQuantity] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     fetchInventoryData();
@@ -155,9 +156,41 @@ const InventoryTable = () => {
 
   const sortedInventories = inventory.slice().sort((a, b) => a.id - b.id);
 
+  const handleToggleCreateForm = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div>
-      <h2>Inventory</h2>
+      <h2>Inventories</h2>
+      {!showCreateForm ? (
+          <button onClick={handleToggleCreateForm}>Add New Inventory</button>
+        ) : (
+          <div>
+            <label>Product:</label>
+            <select value={newProductId} onChange={(e) => setNewProductId(e.target.value)}>
+              <option value="">Select Product</option>
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+            </select>
+            <label>Warehouse:</label>
+            <select value={newWarehouseId} onChange={(e) => setNewWarehouseId(e.target.value)}>
+              <option value="">Select Warehouse</option>
+              {warehouses.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </select>
+            <label>Quantity:</label>
+            <input type="text" value={newQuantity} onChange={(e) => setNewQuantity(e.target.value)} />
+            <button onClick={handleCreateInventory}>Create</button>
+            <button onClick={handleToggleCreateForm}>Cancel</button>
+          </div>
+        )}
       {inventory.length === 0 ? (
         <p>No inventory</p>
       ) : (
@@ -205,28 +238,6 @@ const InventoryTable = () => {
         </table>
       )}
       <div>
-        <h2>Create Inventory</h2>
-        <label>Product:</label>
-        <select value={newProductId} onChange={(e) => setNewProductId(e.target.value)}>
-          <option value="">Select Product</option>
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-        <label>Warehouse:</label>
-        <select value={newWarehouseId} onChange={(e) => setNewWarehouseId(e.target.value)}>
-          <option value="">Select Warehouse</option>
-          {warehouses.map((warehouse) => (
-            <option key={warehouse.id} value={warehouse.id}>
-              {warehouse.name}
-            </option>
-          ))}
-        </select>
-        <label>Quantity:</label>
-        <input type="text" value={newQuantity} onChange={(e) => setNewQuantity(e.target.value)} />
-        <button onClick={handleCreateInventory}>Create</button>
       </div>
     </div>
   );
