@@ -8,6 +8,7 @@ const ProductTable = () => {
   const [updatedProductPrice, setUpdatedProductPrice] = useState("");
   const [newProductName, setNewProductName] = useState("");
   const [newProductPrice, setNewProductPrice] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -81,6 +82,7 @@ const ProductTable = () => {
 
       setNewProductName("");
       setNewProductPrice("");
+      setShowCreateForm(false);
       console.log("Product created successfully!");
     } catch (error) {
       console.error("Error creating product:", error);
@@ -89,13 +91,46 @@ const ProductTable = () => {
 
   const sortedProducts = products.slice().sort((a, b) => a.id - b.id);
 
+  const handleToggleCreateForm = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div>
-      <h2>Product Table</h2>
+      <div className="container">
+      <h2>Products</h2>
+      {!showCreateForm ? (
+        <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">
+          Add New Product
+        </button>
+      ) : (
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Name"
+            value={newProductName}
+            onChange={(e) => setNewProductName(e.target.value)}
+          />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Price"
+            value={newProductPrice}
+            onChange={(e) => setNewProductPrice(e.target.value)}
+          />
+          <button className="btn btn-primary me-2" onClick={handleCreateProduct}>
+            Create
+          </button>
+          <button className="btn btn-secondary" onClick={handleToggleCreateForm}>
+            Cancel
+          </button>
+        </div>
+      )}
       {products.length === 0 ? (
         <p>No products</p>
       ) : (
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -112,6 +147,7 @@ const ProductTable = () => {
                   {editingProductIndex === index ? (
                     <input
                       type="text"
+                      className="form-control"
                       value={updatedProductName}
                       onChange={(e) => setUpdatedProductName(e.target.value)}
                     />
@@ -123,6 +159,7 @@ const ProductTable = () => {
                   {editingProductIndex === index ? (
                     <input
                       type="text"
+                      className="form-control"
                       value={updatedProductPrice}
                       onChange={(e) => setUpdatedProductPrice(e.target.value)}
                     />
@@ -133,36 +170,41 @@ const ProductTable = () => {
                 <td>
                   {editingProductIndex === index ? (
                     <>
-                      <button onClick={() => handleUpdateProduct(product.id)}>Save</button>
-                      <button onClick={() => setEditingProductIndex(null)}>Cancel</button>
+                      <button
+                        className="btn btn-primary me-2"
+                        onClick={() => handleUpdateProduct(product.id)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => setEditingProductIndex(null)}
+                      >
+                        Cancel
+                      </button>
                     </>
                   ) : (
-                    <button onClick={() => handleEditProduct(index, product.name, product.price)}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() =>
+                        handleEditProduct(index, product.name, product.price)
+                      }
+                    >
                       Edit
                     </button>
                   )}
-                  <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+                  <button
+                    className="btn btn-danger ms-2"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      <div>
-        <h2>Create Product</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          value={newProductName}
-          onChange={(e) => setNewProductName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Price"
-          value={newProductPrice}
-          onChange={(e) => setNewProductPrice(e.target.value)}
-        />
-        <button onClick={handleCreateProduct}>Create</button>
       </div>
     </div>
   );

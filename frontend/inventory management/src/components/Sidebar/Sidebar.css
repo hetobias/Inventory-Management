@@ -1,0 +1,19 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 200px; 
+  background-color: #293138; /* Dark background color */
+  padding: 20px;
+}
+
+.nav-link {
+  color: #e6f7ee; /* Text color for navigation links */
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.nav-link:hover {
+  color: #157f83; /* Change to a different color on hover */
+}

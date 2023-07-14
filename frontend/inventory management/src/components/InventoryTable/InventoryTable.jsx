@@ -10,6 +10,7 @@ const InventoryTable = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [editingInventoryId, setEditingInventoryId] = useState(null);
   const [updatedQuantity, setUpdatedQuantity] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     fetchInventoryData();
@@ -155,13 +156,65 @@ const InventoryTable = () => {
 
   const sortedInventories = inventory.slice().sort((a, b) => a.id - b.id);
 
+  const handleToggleCreateForm = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div>
-      <h2>Inventory</h2>
+      <div className="container">
+      <h2>Inventories</h2>
+      {!showCreateForm ? (
+        <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">
+          Add New Inventory
+        </button>
+      ) : (
+        <div className="mb-3">
+          <label className="form-label">Product:</label>
+          <select
+            className="form-select"
+            value={newProductId}
+            onChange={(e) => setNewProductId(e.target.value)}
+          >
+            <option value="">Select Product</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
+          <label className="form-label">Warehouse:</label>
+          <select
+            className="form-select"
+            value={newWarehouseId}
+            onChange={(e) => setNewWarehouseId(e.target.value)}
+          >
+            <option value="">Select Warehouse</option>
+            {warehouses.map((warehouse) => (
+              <option key={warehouse.id} value={warehouse.id}>
+                {warehouse.name}
+              </option>
+            ))}
+          </select>
+          <label className="form-label">Quantity:</label>
+          <input
+            type="text"
+            className="form-control"
+            value={newQuantity}
+            onChange={(e) => setNewQuantity(e.target.value)}
+          />
+          <button className="btn btn-primary me-2" onClick={handleCreateInventory}>
+            Create
+          </button>
+          <button className="btn btn-secondary" onClick={handleToggleCreateForm}>
+            Cancel
+          </button>
+        </div>
+      )}
       {inventory.length === 0 ? (
         <p>No inventory</p>
       ) : (
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -181,6 +234,7 @@ const InventoryTable = () => {
                   {editingInventoryId === item.id ? (
                     <input
                       type="text"
+                      className="form-control"
                       value={updatedQuantity}
                       onChange={(e) => setUpdatedQuantity(e.target.value)}
                     />
@@ -191,42 +245,36 @@ const InventoryTable = () => {
                 <td>
                   {editingInventoryId === item.id ? (
                     <>
-                      <button onClick={() => handleSaveInventory(item.id)}>Save</button>
-                      <button onClick={handleCancelEdit}>Cancel</button>
+                      <button
+                        className="btn btn-primary me-2"
+                        onClick={() => handleSaveInventory(item.id)}
+                      >
+                        Save
+                      </button>
+                      <button className="btn btn-secondary" onClick={handleCancelEdit}>
+                        Cancel
+                      </button>
                     </>
                   ) : (
-                    <button onClick={() => handleEditInventory(item.id, item.quantity)}>Edit</button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleEditInventory(item.id, item.quantity)}
+                    >
+                      Edit
+                    </button>
                   )}
-                  <button onClick={() => handleDeleteInventory(item.id)}>Delete</button>
+                  <button
+                    className="btn btn-danger ms-2"
+                    onClick={() => handleDeleteInventory(item.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      <div>
-        <h2>Create Inventory</h2>
-        <label>Product:</label>
-        <select value={newProductId} onChange={(e) => setNewProductId(e.target.value)}>
-          <option value="">Select Product</option>
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-        <label>Warehouse:</label>
-        <select value={newWarehouseId} onChange={(e) => setNewWarehouseId(e.target.value)}>
-          <option value="">Select Warehouse</option>
-          {warehouses.map((warehouse) => (
-            <option key={warehouse.id} value={warehouse.id}>
-              {warehouse.name}
-            </option>
-          ))}
-        </select>
-        <label>Quantity:</label>
-        <input type="text" value={newQuantity} onChange={(e) => setNewQuantity(e.target.value)} />
-        <button onClick={handleCreateInventory}>Create</button>
       </div>
     </div>
   );
