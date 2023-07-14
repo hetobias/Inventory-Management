@@ -1,7 +1,6 @@
 package com.skillstorm.InventoryManagementSystem.controller;
 
 import com.skillstorm.InventoryManagementSystem.entity.Product;
-import com.skillstorm.InventoryManagementSystem.exception.NotFoundException;
 import com.skillstorm.InventoryManagementSystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +18,25 @@ public class ProductController {
   @Autowired
   private ProductService productService;
 
+  // Retrieves all products
   @GetMapping
   public ResponseEntity<List<Product>> getAllProducts() {
     return ResponseEntity.ok(productService.getAllProducts());
   }
 
+  // Retrieves a specific product by ID
   @GetMapping("/{id}")
   public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id) {
     return ResponseEntity.ok(productService.getProductById(id));
   }
 
+  // Creates a new product
   @PostMapping
   public ResponseEntity<Product> createProduct(@RequestBody Product product) {
     return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
   }
 
+  // Updates an existing product
   @PutMapping("/{id}")
   public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
     // Retrieve the existing product by ID
@@ -57,6 +60,7 @@ public class ProductController {
     }
   }
 
+  // Deletes a product by ID
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     productService.deleteProduct(id);

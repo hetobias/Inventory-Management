@@ -8,16 +8,16 @@ const Dashboard = () => {
   const [totalInventories, setTotalInventories] = useState(0);
 
   useEffect(() => {
-    fetchTotalWarehouses();
-    fetchTotalProducts();
-    fetchTotalInventories();
+    fetchTotalWarehouses(); // Fetch the total number of warehouses
+    fetchTotalProducts(); // Fetch the total number of products
+    fetchTotalInventories(); // Fetch the total number of inventories
   }, []);
 
   const fetchTotalWarehouses = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/warehouses");
       const warehouses = response.data;
-      setTotalWarehouses(warehouses.length);
+      setTotalWarehouses(warehouses.length); // Set the total number of warehouses
     } catch (error) {
       console.error("Error fetching total warehouses:", error);
     }
@@ -27,7 +27,7 @@ const Dashboard = () => {
     try {
       const response = await axios.get("http://localhost:8080/api/products");
       const products = response.data;
-      setTotalProducts(products.length);
+      setTotalProducts(products.length); // Set the total number of products
     } catch (error) {
       console.error("Error fetching total products:", error);
     }
@@ -37,7 +37,7 @@ const Dashboard = () => {
     try {
       const response = await axios.get("http://localhost:8080/api/inventory");
       const inventories = response.data;
-      setTotalInventories(inventories.length);
+      setTotalInventories(inventories.length); // Set the total number of inventories
     } catch (error) {
       console.error("Error fetching total inventories:", error);
     }
@@ -49,7 +49,7 @@ const Dashboard = () => {
         <Card.Body className="text-center">
           <Card.Title>Total Warehouses</Card.Title>
           <Card.Text>
-            <h2>{totalWarehouses}</h2>
+            <h2>{totalWarehouses}</h2> {/* Display the total number of warehouses */}
           </Card.Text>
         </Card.Body>
       </Card>
@@ -57,7 +57,7 @@ const Dashboard = () => {
         <Card.Body className="text-center">
           <Card.Title>Total Products</Card.Title>
           <Card.Text>
-            <h2>{totalProducts}</h2>
+            <h2>{totalProducts}</h2> {/* Display the total number of products */}
           </Card.Text>
         </Card.Body>
       </Card>
@@ -65,7 +65,7 @@ const Dashboard = () => {
         <Card.Body className="text-center">
           <Card.Title>Total Inventories</Card.Title>
           <Card.Text>
-            <h2>{totalInventories}</h2>
+            <h2>{totalInventories}</h2> {/* Display the total number of inventories */}
           </Card.Text>
         </Card.Body>
       </Card>
