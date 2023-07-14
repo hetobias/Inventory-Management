@@ -18,21 +18,25 @@ public class InventoryController {
   @Autowired
   private InventoryService inventoryService;
 
+  // Retrieves all inventory items
   @GetMapping
   public ResponseEntity<List<Inventory>> getAllInventory() {
     return ResponseEntity.ok(inventoryService.getAllInventory());
   }
 
+  // Retrieves a specific inventory item by ID
   @GetMapping("/{id}")
   public ResponseEntity<Optional<Inventory>> getInventoryById(@PathVariable Long id) {
     return ResponseEntity.ok(inventoryService.getInventoryById(id));
   }
 
+  // Creates a new inventory item
   @PostMapping
   public ResponseEntity<Inventory> createInventory(@RequestBody Inventory inventory) {
     return ResponseEntity.status(HttpStatus.CREATED).body(inventoryService.createInventory(inventory));
   }
 
+  // Updates an existing inventory item
   @PutMapping("/{id}")
   public ResponseEntity<Inventory> updateInventory(@PathVariable Long id, @RequestBody Inventory updatedInventory) {
     // Retrieve the existing inventory by ID
@@ -56,6 +60,7 @@ public class InventoryController {
     }
   }
 
+  // Deletes an inventory item by ID
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteInventory(@PathVariable Long id) {
     inventoryService.deleteInventory(id);
