@@ -1,6 +1,5 @@
 package com.skillstorm.InventoryManagementSystem.service;
 
-import com.skillstorm.InventoryManagementSystem.entity.Inventory;
 import com.skillstorm.InventoryManagementSystem.entity.Warehouse;
 import com.skillstorm.InventoryManagementSystem.exception.NotFoundException;
 import com.skillstorm.InventoryManagementSystem.repository.WarehouseRepository;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
 
 @Service
