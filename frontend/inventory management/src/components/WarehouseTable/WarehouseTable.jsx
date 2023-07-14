@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const WarehouseTable = () => {
   // State variables
-  const [warehouses, setWarehouses] = useState([]);
-  const [editingWarehouseId, setEditingWarehouseId] = useState(null);
-  const [updatedWarehouseName, setUpdatedWarehouseName] = useState('');
-  const [updatedWarehouseLocation, setUpdatedWarehouseLocation] = useState('');
-  const [updatedWarehouseCapacity, setUpdatedWarehouseCapacity] = useState('');
-  const [productNames, setProductNames] = useState({});
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showInventories, setShowInventories] = useState({});
+  const [warehouses, setWarehouses] = useState([]); // Holds the list of warehouses
+  const [editingWarehouseId, setEditingWarehouseId] = useState(null); // Stores the ID of the warehouse being edited
+  const [updatedWarehouseName, setUpdatedWarehouseName] = useState(''); // Stores the updated warehouse name
+  const [updatedWarehouseLocation, setUpdatedWarehouseLocation] = useState(''); // Stores the updated warehouse location
+  const [updatedWarehouseCapacity, setUpdatedWarehouseCapacity] = useState(0); // Stores the updated warehouse capacity
+  const [productNames, setProductNames] = useState({}); // Holds the mapping of product IDs to product names
+  const [showCreateForm, setShowCreateForm] = useState(false); // Controls the visibility of the create warehouse form
+  const [showInventories, setShowInventories] = useState({}); // Controls the visibility of warehouse inventories
 
   // Fetch warehouses and product names on component mount
   useEffect(() => {
@@ -18,7 +18,7 @@ const WarehouseTable = () => {
     fetchProductNames();
   }, []);
 
-  // Fetches warehouses from the API
+  // Fetches the list of warehouses from the server
   const fetchWarehouses = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/warehouses');
@@ -28,7 +28,7 @@ const WarehouseTable = () => {
     }
   };
 
-  // Fetches product names from the API and stores them in state
+  // Fetches the product names from the server and creates a mapping of product IDs to names
   const fetchProductNames = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/products');
@@ -45,7 +45,7 @@ const WarehouseTable = () => {
     }
   };
 
-  // Toggles the visibility of inventories for a specific warehouse
+  // Toggles the visibility of warehouse inventories
   const handleToggleInventories = (warehouseId) => {
     setShowInventories((prevState) => ({
       ...prevState,
@@ -61,7 +61,7 @@ const WarehouseTable = () => {
     setUpdatedWarehouseCapacity(warehouseCapacity);
   };
 
-  // Saves the updated warehouse information to the API and updates the state
+  // Updates a warehouse on save
   const handleSaveWarehouse = async (warehouseId) => {
     try {
       const warehouseToUpdate = warehouses.find((warehouse) => warehouse.id === warehouseId);
@@ -94,7 +94,7 @@ const WarehouseTable = () => {
     }
   };
 
-  // Deletes a warehouse from the API and updates the state
+  // Deletes a warehouse
   const deleteWarehouse = async (warehouseId) => {
     try {
       await axios.delete(`http://localhost:8080/api/warehouses/${warehouseId}`);
@@ -107,7 +107,7 @@ const WarehouseTable = () => {
     }
   };
 
-  // Creates a new warehouse and adds it to the state
+  // Creates a new warehouse
   const handleCreateWarehouse = async () => {
     try {
       const newWarehouse = {
@@ -123,7 +123,7 @@ const WarehouseTable = () => {
 
       setUpdatedWarehouseName('');
       setUpdatedWarehouseLocation('');
-      setUpdatedWarehouseCapacity('');
+      setUpdatedWarehouseCapacity(0);
       console.log('Warehouse created successfully!');
     } catch (error) {
       console.error('Error creating warehouse:', error);
@@ -133,19 +133,17 @@ const WarehouseTable = () => {
   // Keeps the order of the table, so if the page ever refreshes it will keep that order.
   const sortedWarehouses = warehouses.slice().sort((a, b) => a.id - b.id);
 
-  // Toggles the visibility of the create form
+  // Toggles the visibility of the create warehouse form
   const handleToggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ paddingTop: '75px' }}>
       <h2>Warehouses</h2>
-      {/* Conditional render: Show "Add New Warehouse" button or create form */}
+      {/* Conditional rendering for create warehouse form */}
       {!showCreateForm ? (
-        <button className="btn btn-primary mb-3" onClick={handleToggleCreateForm}>
-          Add New Warehouse
-        </button>
+        <button className="btn btn-primary mb-3" onClick={handleToggleCreateForm}>Add New Warehouse</button>
       ) : (
         <div>
           <input
@@ -162,22 +160,25 @@ const WarehouseTable = () => {
             value={updatedWarehouseLocation}
             onChange={(e) => setUpdatedWarehouseLocation(e.target.value)}
           />
-          <input
-            type="text"
-            className="form-control mb-2"
-            placeholder="Capacity"
-            value={updatedWarehouseCapacity}
-            onChange={(e) => setUpdatedWarehouseCapacity(e.target.value)}
-          />
-          <button className="btn btn-primary me-2" onClick={handleCreateWarehouse}>
-            Add Warehouse
-          </button>
-          <button className="btn btn-secondary" onClick={handleToggleCreateForm}>
-            Cancel
-          </button>
+          <div className="d-flex align-items-center">
+            <label htmlFor="capacity" className="me-2">Capacity:</label>
+            <input
+              type="range"
+              className="form-range"
+              id="capacity"
+              min="0"
+              max="100"
+              step="1"
+              value={updatedWarehouseCapacity}
+              onChange={(e) => setUpdatedWarehouseCapacity(parseInt(e.target.value))}
+            />
+            <span>{updatedWarehouseCapacity}</span>
+          </div>
+          <button className="btn btn-primary me-2" onClick={handleCreateWarehouse}>Add Warehouse</button>
+          <button className="btn btn-secondary" onClick={handleToggleCreateForm}>Cancel</button>
         </div>
       )}
-      {/* Conditional render: Show warehouses table or "No warehouses" message */}
+      {/* Conditional rendering for warehouses */}
       {warehouses.length === 0 ? (
         <p>No warehouses</p>
       ) : (
@@ -197,7 +198,7 @@ const WarehouseTable = () => {
               <tr key={warehouse.id}>
                 <td>{warehouse.id}</td>
                 <td>
-                  {/* Conditional render: Show input field or warehouse name */}
+                  {/* Conditional rendering for editing warehouse name */}
                   {editingWarehouseId === warehouse.id ? (
                     <input
                       type="text"
@@ -210,7 +211,7 @@ const WarehouseTable = () => {
                   )}
                 </td>
                 <td>
-                  {/* Conditional render: Show input field or warehouse location */}
+                  {/* Conditional rendering for editing warehouse location */}
                   {editingWarehouseId === warehouse.id ? (
                     <input
                       type="text"
@@ -224,17 +225,16 @@ const WarehouseTable = () => {
                 </td>
                 <td>{warehouse.capacity}</td>
                 <td>
+                  {/* Toggle visibility of warehouse inventories */}
                   <button
                     className="btn btn-secondary"
                     onClick={() => handleToggleInventories(warehouse.id)}
                   >
-                    {/* Conditional render: Toggle "Show Inventories" or "Hide Inventories" */}
                     {showInventories[warehouse.id] ? 'Hide Inventories' : 'Show Inventories'}
                   </button>
-                  {/* Conditional render: Show inventories list */}
+                  {/* Conditional rendering for warehouse inventories */}
                   {showInventories[warehouse.id] && (
-                    <ul className="list-unstyled">
-                      {/* Conditional render: Show inventories or "Empty Warehouse" message */}
+                    <ul className ="list-unstyled">
                       {warehouse.inventories.length > 0 ? (
                         warehouse.inventories.map((inventory) => (
                           <li key={inventory.id} className="mb-3">
@@ -250,7 +250,7 @@ const WarehouseTable = () => {
                   )}
                 </td>
                 <td>
-                  {/* Conditional render: Show edit/save or cancel buttons */}
+                  {/* Conditional rendering for warehouse actions */}
                   {editingWarehouseId === warehouse.id ? (
                     <>
                       <button
@@ -281,7 +281,6 @@ const WarehouseTable = () => {
                       Edit
                     </button>
                   )}
-                  {/* Delete warehouse button */}
                   <button
                     className="btn btn-danger"
                     onClick={() => deleteWarehouse(warehouse.id)}

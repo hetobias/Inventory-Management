@@ -182,7 +182,7 @@ const InventoryTable = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ paddingTop: '75px' }}>
       <h2>Inventories</h2>
       {/* Conditional render: Show "Add New Inventory" button or create form */}
       {!showCreateForm ? (
