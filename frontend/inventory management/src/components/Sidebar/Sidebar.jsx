@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Sidebar.css'; // Import the custom CSS file
 
 function Sidebar() {
   return (

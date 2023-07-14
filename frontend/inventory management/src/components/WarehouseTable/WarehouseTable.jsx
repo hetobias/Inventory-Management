@@ -129,38 +129,41 @@ const WarehouseTable = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Warehouses</h2>
       {!showCreateForm ? (
-        <button onClick={handleToggleCreateForm}>Add New Warehouse</button>
+        <button className="btn btn-primary mb-3" onClick={handleToggleCreateForm}>Add New Warehouse</button>
       ) : (
         <div>
           <input
             type="text"
+            className="form-control mb-2"
             placeholder="Name"
             value={updatedWarehouseName}
             onChange={(e) => setUpdatedWarehouseName(e.target.value)}
           />
           <input
             type="text"
+            className="form-control mb-2"
             placeholder="Location"
             value={updatedWarehouseLocation}
             onChange={(e) => setUpdatedWarehouseLocation(e.target.value)}
           />
           <input
             type="text"
+            className="form-control mb-2"
             placeholder="Capacity"
             value={updatedWarehouseCapacity}
             onChange={(e) => setUpdatedWarehouseCapacity(e.target.value)}
           />
-          <button onClick={handleCreateWarehouse}>Add Warehouse</button>
-          <button onClick={handleToggleCreateForm}>Cancel</button>
+          <button className="btn btn-primary me-2" onClick={handleCreateWarehouse}>Add Warehouse</button>
+          <button className="btn btn-secondary" onClick={handleToggleCreateForm}>Cancel</button>
         </div>
       )}
       {warehouses.length === 0 ? (
         <p>No warehouses</p>
       ) : (
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -179,6 +182,7 @@ const WarehouseTable = () => {
                   {editingWarehouseId === warehouse.id ? (
                     <input
                       type="text"
+                      className="form-control"
                       value={updatedWarehouseName}
                       onChange={(e) => setUpdatedWarehouseName(e.target.value)}
                     />
@@ -190,6 +194,7 @@ const WarehouseTable = () => {
                   {editingWarehouseId === warehouse.id ? (
                     <input
                       type="text"
+                      className="form-control"
                       value={updatedWarehouseLocation}
                       onChange={(e) => setUpdatedWarehouseLocation(e.target.value)}
                     />
@@ -199,17 +204,20 @@ const WarehouseTable = () => {
                 </td>
                 <td>{warehouse.capacity}</td>
                 <td>
-                  <button onClick={() => handleToggleInventories(warehouse.id)}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleToggleInventories(warehouse.id)}
+                  >
                     {showInventories[warehouse.id] ? 'Hide Inventories' : 'Show Inventories'}
                   </button>
                   {showInventories[warehouse.id] && (
-                    <ul>
+                    <ul class ="list-unstyled">
                       {warehouse.inventories.length > 0 ? (
                         warehouse.inventories.map((inventory) => (
-                          <li key={inventory.id}>
-                            <p>Inventory ID: {inventory.id}</p>
-                            <p>Product Name: {productNames[inventory.productId]}</p>
-                            <p>Quantity: {inventory.quantity}</p>
+                          <li key={inventory.id} className="mb-3">
+                            <p className="mb-1">Inventory ID: {inventory.id}</p>
+                            <p className="mb-1">Product Name: {productNames[inventory.productId]}</p>
+                            <p className="mb-0">Quantity: {inventory.quantity}</p>
                           </li>
                         ))
                       ) : (
@@ -221,15 +229,40 @@ const WarehouseTable = () => {
                 <td>
                   {editingWarehouseId === warehouse.id ? (
                     <>
-                      <button onClick={() => handleSaveWarehouse(warehouse.id)}>Save</button>
-                      <button onClick={() => setEditingWarehouseId(null)}>Cancel</button>
+                      <button
+                        className="btn btn-primary me-2"
+                        onClick={() => handleSaveWarehouse(warehouse.id)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => setEditingWarehouseId(null)}
+                      >
+                        Cancel
+                      </button>
                     </>
                   ) : (
-                    <button onClick={() => handleEditWarehouse(warehouse.id, warehouse.name, warehouse.location, warehouse.capacity)}>
+                    <button
+                      className="btn btn-primary me-2"
+                      onClick={() =>
+                        handleEditWarehouse(
+                          warehouse.id,
+                          warehouse.name,
+                          warehouse.location,
+                          warehouse.capacity
+                        )
+                      }
+                    >
                       Edit
                     </button>
                   )}
-                  <button onClick={() => deleteWarehouse(warehouse.id)}>Delete</button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteWarehouse(warehouse.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -241,4 +274,3 @@ const WarehouseTable = () => {
 };
 
 export default WarehouseTable;
-
