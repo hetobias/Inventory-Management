@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const InventoryTable = () => {
+  // State variables
   const [inventory, setInventory] = useState([]);
   const [newProductId, setNewProductId] = useState("");
   const [newWarehouseId, setNewWarehouseId] = useState("");
@@ -12,12 +13,14 @@ const InventoryTable = () => {
   const [updatedQuantity, setUpdatedQuantity] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
 
+  // Fetch inventory, products, and warehouses on component mount
   useEffect(() => {
     fetchInventoryData();
     fetchProducts();
     fetchWarehouses();
   }, []);
 
+  // Fetches inventory data from the API and updates the state
   const fetchInventoryData = async () => {
     try {
       const inventoryResponse = await axios.get("http://localhost:8080/api/inventory");
@@ -47,6 +50,7 @@ const InventoryTable = () => {
     }
   };
 
+  // Fetches products from the API and updates the state
   const fetchProducts = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/products");
@@ -56,6 +60,7 @@ const InventoryTable = () => {
     }
   };
 
+  // Fetches warehouses from the API and updates the state
   const fetchWarehouses = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/warehouses");
@@ -65,6 +70,7 @@ const InventoryTable = () => {
     }
   };
 
+  // Deletes an inventory item from the API and updates the state
   const handleDeleteInventory = async (inventoryId) => {
     try {
       await axios.delete(`http://localhost:8080/api/inventory/${inventoryId}`);
@@ -77,6 +83,7 @@ const InventoryTable = () => {
     }
   };
 
+  // Creates a new inventory item and updates the state
   const handleCreateInventory = async () => {
     try {
       const newInventoryItem = {
@@ -88,34 +95,34 @@ const InventoryTable = () => {
         },
         quantity: newQuantity,
       };
-  
+
       const response = await axios.get(`http://localhost:8080/api/warehouses/${newWarehouseId}`);
       const warehouse = response.data;
       const updatedCapacity = warehouse.capacity - newQuantity;
-  
+
       if (updatedCapacity < 0) {
         alert('Inventory cannot be added because the warehouse is full');
         return;
       }
-  
+
       const updatedWarehouse = { ...warehouse, capacity: updatedCapacity };
       await axios.put(`http://localhost:8080/api/warehouses/${newWarehouseId}`, updatedWarehouse);
-  
+
       const inventoryResponse = await axios.post("http://localhost:8080/api/inventory", newInventoryItem);
       const createdInventoryItem = inventoryResponse.data;
-  
+
       const productResponse = await axios.get(`http://localhost:8080/api/products/${createdInventoryItem.productId}`);
       const product = productResponse.data;
-  
+
       const updatedInventoryItem = {
         id: createdInventoryItem.id,
         productName: product.name,
         warehouseName: warehouse.name,
         quantity: createdInventoryItem.quantity,
       };
-  
+
       setInventory((prevInventory) => [...prevInventory, updatedInventoryItem]);
-  
+
       setNewProductId("");
       setNewWarehouseId("");
       setNewQuantity("");
@@ -125,11 +132,13 @@ const InventoryTable = () => {
     }
   };
 
+  // Sets the state variables for editing an inventory item
   const handleEditInventory = (inventoryId, quantity) => {
     setEditingInventoryId(inventoryId);
     setUpdatedQuantity(quantity);
   };
 
+  // Updates the inventory item in the API and updates the state
   const handleSaveInventory = async (inventoryId) => {
     try {
       const updatedInventoryItem = {
@@ -158,13 +167,16 @@ const InventoryTable = () => {
     }
   };
 
+  // Cancels the edit and resets the state variables
   const handleCancelEdit = () => {
     setEditingInventoryId(null);
     setUpdatedQuantity("");
   };
 
+  // Sorts inventory items by ID
   const sortedInventories = inventory.slice().sort((a, b) => a.id - b.id);
 
+  // Toggles the visibility of the create form
   const handleToggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
   };
@@ -172,6 +184,7 @@ const InventoryTable = () => {
   return (
     <div className="container" style={{ paddingTop: '75px' }}>
       <h2>Inventories</h2>
+      {/* Conditional render: Show "Add New Inventory" button or create form */}
       {!showCreateForm ? (
         <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">
           Add New Inventory
@@ -219,6 +232,7 @@ const InventoryTable = () => {
           </button>
         </div>
       )}
+      {/* Conditional render: Show inventory table or "No inventory" message */}
       {inventory.length === 0 ? (
         <p>No inventory</p>
       ) : (
@@ -239,6 +253,7 @@ const InventoryTable = () => {
                 <td>{item.productName}</td>
                 <td>{item.warehouseName}</td>
                 <td>
+                  {/* Conditional render: Show input field or quantity */}
                   {editingInventoryId === item.id ? (
                     <input
                       type="text"
@@ -251,6 +266,7 @@ const InventoryTable = () => {
                   )}
                 </td>
                 <td>
+                  {/* Conditional render: Show edit/save or cancel buttons */}
                   {editingInventoryId === item.id ? (
                     <>
                       <button
@@ -271,6 +287,7 @@ const InventoryTable = () => {
                       Edit
                     </button>
                   )}
+                  {/* Delete inventory item button */}
                   <button
                     className="btn btn-danger ms-2"
                     onClick={() => handleDeleteInventory(item.id)}
