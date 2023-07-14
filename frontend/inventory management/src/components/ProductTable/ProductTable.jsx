@@ -6,6 +6,8 @@ const ProductTable = () => {
   const [editingProductIndex, setEditingProductIndex] = useState(null);
   const [updatedProductName, setUpdatedProductName] = useState("");
   const [updatedProductPrice, setUpdatedProductPrice] = useState("");
+  const [newProductName, setNewProductName] = useState("");
+  const [newProductPrice, setNewProductPrice] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -62,6 +64,26 @@ const ProductTable = () => {
       console.log("Product updated successfully!");
     } catch (error) {
       console.error("Error updating product:", error);
+    }
+  };
+
+  const handleCreateProduct = async () => {
+    try {
+      const newProduct = {
+        name: newProductName,
+        price: newProductPrice,
+      };
+
+      const response = await axios.post("http://localhost:8080/api/products", newProduct);
+      const createdProduct = response.data;
+
+      setProducts((prevProducts) => [...prevProducts, createdProduct]);
+
+      setNewProductName("");
+      setNewProductPrice("");
+      console.log("Product created successfully!");
+    } catch (error) {
+      console.error("Error creating product:", error);
     }
   };
 
@@ -126,6 +148,22 @@ const ProductTable = () => {
           </tbody>
         </table>
       )}
+      <div>
+        <h2>Create Product</h2>
+        <input
+          type="text"
+          placeholder="Name"
+          value={newProductName}
+          onChange={(e) => setNewProductName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Price"
+          value={newProductPrice}
+          onChange={(e) => setNewProductPrice(e.target.value)}
+        />
+        <button onClick={handleCreateProduct}>Create</button>
+      </div>
     </div>
   );
 };
