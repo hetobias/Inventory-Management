@@ -130,7 +130,7 @@ const ProductTable = () => {
       {products.length === 0 ? (
         <p>No products</p>
       ) : (
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>

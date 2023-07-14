@@ -88,25 +88,34 @@ const InventoryTable = () => {
         },
         quantity: newQuantity,
       };
-
-      const response = await axios.post("http://localhost:8080/api/inventory", newInventoryItem);
-      const createdInventoryItem = response.data;
-
+  
+      const response = await axios.get(`http://localhost:8080/api/warehouses/${newWarehouseId}`);
+      const warehouse = response.data;
+      const updatedCapacity = warehouse.capacity - newQuantity;
+  
+      if (updatedCapacity < 0) {
+        alert('Inventory cannot be added because the warehouse is full');
+        return;
+      }
+  
+      const updatedWarehouse = { ...warehouse, capacity: updatedCapacity };
+      await axios.put(`http://localhost:8080/api/warehouses/${newWarehouseId}`, updatedWarehouse);
+  
+      const inventoryResponse = await axios.post("http://localhost:8080/api/inventory", newInventoryItem);
+      const createdInventoryItem = inventoryResponse.data;
+  
       const productResponse = await axios.get(`http://localhost:8080/api/products/${createdInventoryItem.productId}`);
       const product = productResponse.data;
-
-      const warehouseResponse = await axios.get(`http://localhost:8080/api/warehouses/${createdInventoryItem.warehouseId}`);
-      const warehouse = warehouseResponse.data;
-
+  
       const updatedInventoryItem = {
         id: createdInventoryItem.id,
         productName: product.name,
         warehouseName: warehouse.name,
         quantity: createdInventoryItem.quantity,
       };
-
+  
       setInventory((prevInventory) => [...prevInventory, updatedInventoryItem]);
-
+  
       setNewProductId("");
       setNewWarehouseId("");
       setNewQuantity("");
@@ -161,8 +170,7 @@ const InventoryTable = () => {
   };
 
   return (
-    <div>
-      <div className="container">
+    <div className="container">
       <h2>Inventories</h2>
       {!showCreateForm ? (
         <button onClick={handleToggleCreateForm} className="btn btn-primary mb-3">
@@ -214,7 +222,7 @@ const InventoryTable = () => {
       {inventory.length === 0 ? (
         <p>No inventory</p>
       ) : (
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>
@@ -275,7 +283,6 @@ const InventoryTable = () => {
           </tbody>
         </table>
       )}
-      </div>
     </div>
   );
 };

@@ -163,7 +163,7 @@ const WarehouseTable = () => {
       {warehouses.length === 0 ? (
         <p>No warehouses</p>
       ) : (
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>
@@ -211,7 +211,7 @@ const WarehouseTable = () => {
                     {showInventories[warehouse.id] ? 'Hide Inventories' : 'Show Inventories'}
                   </button>
                   {showInventories[warehouse.id] && (
-                    <ul class ="list-unstyled">
+                    <ul className ="list-unstyled">
                       {warehouse.inventories.length > 0 ? (
                         warehouse.inventories.map((inventory) => (
                           <li key={inventory.id} className="mb-3">
