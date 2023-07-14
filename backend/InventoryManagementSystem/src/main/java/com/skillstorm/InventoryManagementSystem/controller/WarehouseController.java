@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/warehouses")
+@CrossOrigin(origins = "http://localhost:5173")
 public class WarehouseController {
 
   @Autowired
