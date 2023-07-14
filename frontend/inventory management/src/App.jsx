@@ -6,7 +6,6 @@ import ProductTable from './components/ProductTable/ProductTable';
 import WarehouseTable from './components/WarehouseTable/WarehouseTable';
 import Dashboard from './components/Dashboard/Dashboard';
 
-
 function App() {
   return (
     <Router>
