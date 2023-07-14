@@ -43,7 +43,7 @@ public class WarehouseService {
     }
 
     /**
-     * Update an existing warehouse.
+     * Update an existing warehouse's name, location, and capacity.
      */
     public Warehouse updateWarehouse(Long id, Warehouse updatedWarehouse) {
         Warehouse existingWarehouse = warehouseRepository.findById(id)
@@ -52,17 +52,6 @@ public class WarehouseService {
         existingWarehouse.setName(updatedWarehouse.getName());
         existingWarehouse.setLocation(updatedWarehouse.getLocation());
         existingWarehouse.setCapacity(updatedWarehouse.getCapacity());
-
-        // Update inventories
-        Set<Inventory> updatedInventories = updatedWarehouse.getInventories();
-        for (Inventory updatedInventory : updatedInventories) {
-            Long inventoryId = updatedInventory.getId();
-            Inventory existingInventory = existingWarehouse.getInventories().stream()
-                    .filter(inv -> inv.getId().equals(inventoryId))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Inventory not found with id: " + inventoryId));
-            existingInventory.setQuantity(updatedInventory.getQuantity());
-        }
 
         return warehouseRepository.save(existingWarehouse);
     }
